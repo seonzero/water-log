@@ -17,6 +17,7 @@ DATABASE_URL = "sqlite:///./water_log.db"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 ##Fastapi같은 비동기 환경에서도 여러 요청이 들어와도 문제없도록 설정함 (False)
 SessionLocal = sessionmaker(bind=engine)
+##DB에 접속해서 데이터를 넣고빼는 작업단위(세션)을 만들어 줌
 Base = declarative_base()
 ##모든 테이블 모델의 기초가 되는 클래스를 생성함
 
