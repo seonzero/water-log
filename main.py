@@ -50,3 +50,32 @@ def create_records(record: RecordCreate, db: Session = Depends(get_db)):
 
     #5. 저장된 결과를 사용자에게 보여줌
     return new_record
+
+
+
+# 06. READ: 저장된 기록 조회하기
+@app.get("/records")
+def get_records(db: Session = Depends(get_db)):
+    return db.query(Record).all()
+
+
+# 07. UPDATE: 기록 수정
+@app.put("/records/{record_id}")
+def update_records(record_id: int, record: RecordCreate, db: Session = Depends(get_db)):
+    db_record = db.query(Record).filter(Record.id == record_id).first()
+    if not db_record:
+        return {"error": "기록을 찾을 수 없어요"}
+    db_record.amount = record.amount
+    db.commit()
+    db.refresh(db_record)
+    return db_record
+
+# 08. DELETE: 기록 삭제
+@app.delete("/records/{record_id}")
+def delete_record(record_id: int, db: Session = Depends(get_db)):
+    db_record = db.query(Record).filter(Record.id == record_id).first()
+    if not db_record:
+        return {"error": "기록을 찾을 수 없어요"}
+    db.delete(db_record)
+    db.commit()
+    return {"message": "삭제 완료"}
